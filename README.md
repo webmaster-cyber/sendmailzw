@@ -162,14 +162,14 @@ You'll need to enter this domain and IP address during installation.
 **Intel/AMD:**
 ```bash
 curl -LO https://github.com/emaildelivery/edcom-ce/releases/latest/download/edcom-install-amd64.tgz
-tar -xvf edcom-install-amd64.tgz
+tar -xzvf edcom-install-amd64.tgz
 cd edcom-install
 ./ez_setup.sh 
 ```
 **ARM/AArch64:** 
 ```bash
 curl -LO https://github.com/emaildelivery/edcom-ce/releases/latest/download/edcom-install-arm64.tgz
-tar -xvf edcom-install-arm64.tgz
+tar -xzvf edcom-install-arm64.tgz
 cd edcom-install
 ./ez_setup.sh 
 ```
