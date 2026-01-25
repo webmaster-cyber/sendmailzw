@@ -142,33 +142,85 @@ Extended Phase 5 with additional features based on reference designs:
 - Links to API documentation
 - Info boxes for authentication and Cloudflare notes
 
-### Suppression Lists ✅
-- Suppression lists page with search and table view
-- Create/edit suppression list with file upload/import
-- CSV import functionality via S3
+### Suppression & Exclusion Lists ✅
+- Suppression lists page with card layout and circular count badges
+- Tabs for switching between Suppression and Exclusion lists
+- Suppression lists: user-created, supports create/edit/delete, CSV import via S3
+- Exclusion lists: fixed system lists (Do Not Email, Malicious, Domains), add-only
+- ExclusionAddPage for adding emails/domains to exclusion lists
 
 ### Domain Throttles ✅
 - Throttles list page with route and limit display
-- Create/edit throttle with domain wildcards support
+- Create/edit throttle with domain wildcards support (e.g., `yahoo.*`, `*.edu`)
 - Activate/deactivate toggle
 
 ### Settings Pages ✅
-- Change Password page with validation
-- Data Exports page with download links and auto-refresh
+- Change Password page with current password verification before allowing change
+- Data Exports page with download buttons, processing status, auto-refresh
 
-### Suppression & Exclusion Lists Enhancements
-- Rewrote SuppressionPage to use card layout with circular count badges
-- Added tabs for switching between Suppression and Exclusion lists
-- SuppressionEditPage now handles both suppression and exclusion based on URL path
-- Added exclusion routes to App.tsx (/exclusion/new, /exclusion/edit)
+### Sidebar & Navigation ✅
+- Added "Data" section with Exports link (was hidden in user menu)
+- Fixed `brand-primary` → `primary` color class across multiple files
 
-### Sidebar Updates
-- Added Data Exports to sidebar menu under "Integrate" section (was hidden in user menu)
+---
 
-### Next Steps
-- [ ] Zapier/Pabbly integrations - Need to verify if these are still supported and update URLs/OAuth flows
-- [ ] Visual form builder (drag-and-drop customization)
+## Remaining Migration Phases
+
+### Phase 8: Admin Backend 🔲
+- [ ] Customers management (list, create, edit, impersonate)
+- [ ] Servers management
+- [ ] Delivery Policies
+- [ ] Postal Routes
+- [ ] Connections (SMTP Relay, Mailgun, SES, SparkPost, Easylink)
+- [ ] Reports (Customer Broadcasts, Email Delivery, IP Delivery, Admin Log)
+- [ ] Frontend/template management
+- [ ] Sign-up page settings
+
+### Phase 9: Multi-Brand Polish 🔲
+- [ ] Brand CSS files (betting, fanzone, agriculture, mwosfc)
+- [ ] Feature flags per brand
+- [ ] Brand-specific logos/favicons
+
+### Phase 10: Payment Gateway Abstraction 🔲
+- [ ] Payment gateway interface (abstract provider)
+- [ ] Paynow/EcoCash integration (Zimbabwe)
+- [ ] Stripe integration (international)
+- [ ] Plan definitions, usage metering
+
+### Phase 11: Public Signup + Plans 🔲
+- [ ] Self-service signup flow with email verification
+- [ ] Free tier auto-provisioning
+- [ ] Upgrade/downgrade UI
+- [ ] Usage indicators and warning emails
+
+### Phase 12: Marketing Site 🔲
+- [ ] Astro project for sendmail.co.zw
+- [ ] Keystatic CMS for content editing
+- [ ] SEO optimization
+
+### Phase 13: Cutover 🔲
+- [ ] Update Docker/nginx to serve new client
+- [ ] Remove old `client/` directory
+- [ ] Performance + accessibility audit
+
+---
+
+## Backlog (Lower Priority)
+- [ ] Zapier/Pabbly integrations - verify if still supported
+- [ ] Visual form builder (drag-and-drop)
 - [ ] Additional reporting features
+
+---
+
+## Future Roadmap (Post-Migration)
+See `docs/future-roadmap.md` for details:
+- Priority 0: Universal Bounce Ingestion Service
+- Priority 1: SMS + WhatsApp channels
+- Priority 2: A/B Testing
+- Priority 3: Contact Verification
+- Priority 4: Reseller/Agency Model
+- Priority 5: Landing Pages
+- Priority 6: Automation Upgrades
 
 ---
 
