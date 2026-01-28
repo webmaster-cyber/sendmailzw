@@ -261,6 +261,13 @@ Extended Phase 5 with additional features based on reference designs:
 - **Site Settings**: Social share image, Twitter handle, Google verification code
 - **Page SEO singleton**: Per-page titles and descriptions for homepage, features, pricing, about, contact
 
+### Deployment Infrastructure ✅
+- Created `upgrade.sh` script for safe VPS upgrades
+- Automatic database backup before changes
+- Runs schema migrations (billing.sql)
+- Rebuilds and restarts containers
+- Includes rollback instructions if needed
+
 ---
 
 ## Remaining Migration Phases
@@ -304,7 +311,10 @@ Extended Phase 5 with additional features based on reference designs:
 - [x] CMS-editable SEO (per-page titles/descriptions, social image, Google verification)
 
 ### Phase 13: Cutover 🔲
-- [ ] Update Docker/nginx to serve new client
+- [x] Created `upgrade.sh` for safe deployments (backup, migrate, rebuild, restart)
+- [ ] Run upgrade on VPS (`./upgrade.sh`)
+- [ ] Deploy marketing site to production
+- [ ] Configure DNS (sendmail.co.zw → marketing, app.sendmail.co.zw → app)
 - [ ] Remove old `client/` directory
 - [ ] Performance + accessibility audit
 
