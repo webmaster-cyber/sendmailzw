@@ -43,6 +43,15 @@ echo ""
 echo "Step 4: Rebuilding containers..."
 docker compose build --pull api tasks client
 
+# Update marketing site if it exists
+if [[ -d "marketing" ]]; then
+    echo ""
+    echo "Step 4b: Updating marketing site..."
+    cd marketing
+    git pull origin main 2>/dev/null || echo "  Marketing site not a git repo, skipping pull"
+    cd ..
+fi
+
 echo ""
 echo "Step 5: Restarting services..."
 docker compose down

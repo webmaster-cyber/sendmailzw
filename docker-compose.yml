@@ -84,6 +84,20 @@ services:
     platform: linux/amd64
     container_name: edcom-screenshot
     restart: unless-stopped
+  marketing:
+    image: node:20-alpine
+    container_name: edcom-marketing
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install && npm run build && node dist/server/entry.mjs"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=4321
+    volumes:
+      - "./marketing:/app"
+    profiles:
+      - marketing
+
   proxy:
     image: edcom/proxy
     platform: linux/amd64
