@@ -249,42 +249,59 @@ Extended Phase 5 with additional features based on reference designs:
 - `ContactMessages` and `ContactMessage` admin endpoints
 - Custom SQL (not CRUDCollection) to avoid company ID filtering
 
+### SEO Optimization ✅
+- Open Graph tags (og:title, og:description, og:image, og:url)
+- Twitter Card tags (summary_large_image) with configurable handle
+- Canonical URLs on all pages
+- Google Site Verification meta tag support
+- robots.txt (allows all, blocks /keystatic/)
+- sitemap.xml (static, 7 public pages)
+
+### CMS-Editable SEO ✅
+- **Site Settings**: Social share image, Twitter handle, Google verification code
+- **Page SEO singleton**: Per-page titles and descriptions for homepage, features, pricing, about, contact
+
 ---
 
 ## Remaining Migration Phases
 
-### Phase 8: Admin Backend 🔲 (In Progress)
+### Phase 8: Admin Backend ✅
 - [x] Customers management (list, create, edit, impersonate)
 - [x] Frontend configuration
-- [ ] Servers management
-- [ ] Delivery Policies
-- [ ] Postal Routes
-- [ ] Connections (SMTP Relay, Mailgun, SES, SparkPost, Easylink)
-- [ ] Reports (Customer Broadcasts, Email Delivery, IP Delivery, Admin Log)
-- [ ] Sign-up page settings
+- [x] Servers management (ServersPage, ServerEditPage)
+- [x] Delivery Policies (PoliciesPage, PolicyEditPage)
+- [x] Postal Routes (RoutesPage, RouteEditPage)
+- [x] Connections (SMTP Relay, Mailgun, SES)
+- [x] Reports (Customer Broadcasts, Email Delivery, IP Delivery, Admin Log)
+- [x] Sign-up page settings (SignupPage)
+- [x] IP Warmups (WarmupsPage, WarmupEditPage)
 
-### Phase 9: Multi-Brand Polish 🔲
-- [ ] Brand CSS files (betting, fanzone, agriculture, mwosfc)
-- [ ] Feature flags per brand
-- [ ] Brand-specific logos/favicons
+### Phase 9: Multi-Brand Polish ✅
+- [x] Brand theming via CSS custom properties
+- [x] Feature flags per brand
+- [x] Brand-specific logos/favicons
 
-### Phase 10: Payment Gateway Abstraction 🔲
-- [ ] Payment gateway interface (abstract provider)
-- [ ] Paynow/EcoCash integration (Zimbabwe)
-- [ ] Stripe integration (international)
-- [ ] Plan definitions, usage metering
+### Phase 10: Plans + Subscriptions ✅
+- [x] Plan CRUD (PlansPage, PlanEditPage)
+- [x] Subscription model with trial support
+- [x] BillingPage (customer plan & usage view)
+- [x] InvoicesPage (invoice history)
+- [x] Subscription cron job (check_subscriptions)
 
-### Phase 11: Public Signup + Plans 🔲
-- [ ] Self-service signup flow with email verification
-- [ ] Free tier auto-provisioning
-- [ ] Upgrade/downgrade UI
-- [ ] Usage indicators and warning emails
+### Phase 11: Payment Gateways ✅
+- [x] Payment gateway abstraction (PaymentGateway ABC)
+- [x] Paynow/EcoCash integration
+- [x] Stripe integration
+- [x] PaymentGatewaysPage (admin config)
+- [x] CheckoutPage (customer payment flow)
+- [x] Webhook handlers (Paynow, Stripe)
 
 ### Phase 12: Marketing Site ✅
 - [x] Astro project for sendmail.co.zw
 - [x] Keystatic CMS for content editing
 - [x] Contact form with spam prevention
-- [ ] SEO optimization (meta tags, sitemap, etc.)
+- [x] SEO optimization (OG tags, Twitter cards, sitemap, robots.txt)
+- [x] CMS-editable SEO (per-page titles/descriptions, social image, Google verification)
 
 ### Phase 13: Cutover 🔲
 - [ ] Update Docker/nginx to serve new client
