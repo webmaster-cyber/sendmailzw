@@ -9,3 +9,5 @@ machine-id
 .build
 test/logs
 config/logrotate.status
+client-next/dist
+backup_*.sql

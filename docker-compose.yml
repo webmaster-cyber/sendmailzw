@@ -109,6 +109,7 @@ services:
     depends_on:
       - api
     volumes:
+      - "./client-next/dist:/usr/share/nginx/html"
       - "./data/buckets/images:/usr/share/nginx/html/i"
       - "./data/buckets/transfer:/usr/share/nginx/html/transfer"
       - "./data/logs/nginx:/var/log/nginx"

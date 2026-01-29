@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # SendMail Upgrade Script
-# Pulls latest code, runs migrations, and restarts services
+# Pulls latest code, runs migrations, builds client, and restarts services
 
 set -e
 
@@ -40,29 +40,41 @@ if [[ -f "schema/billing.sql" ]]; then
 fi
 
 echo ""
-echo "Step 4: Rebuilding containers..."
-docker compose build --pull api tasks client
+echo "Step 4: Building client-next..."
+if [[ -d "client-next" ]]; then
+    cd client-next
+    npm install
+    npm run build
+    cd ..
+    echo "  Client built to client-next/dist"
+else
+    echo "  Warning: client-next directory not found"
+fi
+
+echo ""
+echo "Step 5: Rebuilding API containers..."
+docker compose build --pull api tasks
 
 # Update marketing site if it exists
 if [[ -d "marketing" ]]; then
     echo ""
-    echo "Step 4b: Updating marketing site..."
+    echo "Step 5b: Updating marketing site..."
     cd marketing
     git pull origin main 2>/dev/null || echo "  Marketing site not a git repo, skipping pull"
     cd ..
 fi
 
 echo ""
-echo "Step 5: Restarting services..."
+echo "Step 6: Restarting services..."
 docker compose down
 docker compose up -d --scale tasks=1
 
 echo ""
-echo "Step 6: Waiting for services to start..."
+echo "Step 7: Waiting for services to start..."
 sleep 10
 
 echo ""
-echo "Step 7: Health check..."
+echo "Step 8: Health check..."
 if docker compose ps | grep -q "unhealthy"; then
     echo "Warning: Some containers report unhealthy status"
     docker compose ps
