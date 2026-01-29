@@ -312,11 +312,23 @@ Extended Phase 5 with additional features based on reference designs:
 
 ### Phase 13: Cutover 🔲
 - [x] Created `upgrade.sh` for safe deployments (backup, migrate, rebuild, restart)
-- [ ] Run upgrade on VPS (`./upgrade.sh`)
-- [ ] Deploy marketing site to production
-- [ ] Configure DNS (sendmail.co.zw → marketing, app.sendmail.co.zw → app)
-- [ ] Remove old `client/` directory
-- [ ] Performance + accessibility audit
+- [x] Added client-next build step to `upgrade.sh`
+- [x] Updated `docker-compose.yml` to mount `client-next/dist` as nginx html root
+- [x] Added multisite support for marketing + main app on same server
+- [x] Created `enable_multisite.sh` script
+- [x] Created `generate_multisite_certificate.sh` for SAN SSL certs
+- [x] Created `config/nginx.ssl.multisite.conf` for domain-based routing
+- [x] Created comprehensive `docs/cutover-plan.md` with 7 phases
+- [ ] Provision new server
+- [ ] Export data from old server
+- [ ] Run setup on new server
+- [ ] Build client-next (`npm run build`)
+- [ ] Import database
+- [ ] Deploy marketing site (`./enable_multisite.sh`)
+- [ ] Test via hosts file
+- [ ] Update DNS records
+- [ ] Generate SSL certificate
+- [ ] Verify production
 
 ---
 
