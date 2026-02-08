@@ -860,9 +860,17 @@ function goBack() {
     window.scrollTo(0, 0);
 }
 
-// Auto-select if plan preselected via URL
-if (preselected && planData[preselected]) {
-    selectPlan(preselected, planData[preselected].slug);
+// Auto-select if plan preselected via URL (match by ID or slug)
+if (preselected) {
+    var matchId = preselected;
+    if (!planData[matchId]) {
+        Object.keys(planData).forEach(function(id) {
+            if (planData[id].slug === preselected) matchId = id;
+        });
+    }
+    if (planData[matchId]) {
+        selectPlan(matchId, planData[matchId].slug);
+    }
 }
 </script>
 <script src="%s/api/signupaction/%s"></script>
