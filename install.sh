@@ -14,15 +14,40 @@ if [[ ! -f "install.sh" ]]; then
     exit 1
 fi
 
-if ! docker info > /dev/null 2>&1; then
-    echo "Docker is not running. Start Docker first."
-    exit 1
-fi
-
 echo ""
 echo "=============================="
-echo "  SendMail Setup from Source"
+echo "  SendMail Install"
 echo "=============================="
+echo ""
+
+# Install system dependencies
+echo ">>> Checking dependencies..."
+
+apt update -qq
+
+if ! command -v git &> /dev/null; then
+    echo "    Installing git..."
+    apt install -y -qq git
+fi
+
+if ! command -v docker &> /dev/null; then
+    echo "    Installing Docker..."
+    curl -fsSL https://get.docker.com | bash
+fi
+
+if ! docker info > /dev/null 2>&1; then
+    echo "    Starting Docker..."
+    systemctl start docker
+    systemctl enable docker
+fi
+
+if ! command -v node &> /dev/null; then
+    echo "    Installing Node.js..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    apt install -y -qq nodejs
+fi
+
+echo "    All dependencies installed."
 echo ""
 
 # Collect IP and domain
@@ -96,13 +121,6 @@ docker build -t edcom/screenshot screenshot/
 docker build -t edcom/proxy -f services/proxy-dev.Dockerfile .
 
 # Build client-next
-echo ""
-echo ">>> Installing Node.js..."
-if ! command -v node &> /dev/null; then
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-    apt install -y nodejs
-fi
-
 echo ""
 echo ">>> Building client-next..."
 cd client-next
