@@ -115,3 +115,4 @@ services:
       - "./data/logs/nginx:/var/log/nginx"
       - "./data/letsencrypt-challenge/.well-known/acme-challenge:/usr/share/nginx/html/.well-known/acme-challenge"
       - "./config:/config"
+      - "./config/nginx.ssl.conf:/etc/nginx/nginx.ssl.conf"
