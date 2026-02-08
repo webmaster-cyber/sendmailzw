@@ -33,7 +33,7 @@ curl -fsSL https://get.docker.com | bash
 apt install -y git
 
 # Clone the repo
-git clone https://github.com/webmaster-cyber/edcom-ce.git edcom-install
+git clone https://github.com/webmaster-cyber/sendmailzw.git edcom-install
 cd edcom-install
 ```
 
@@ -103,7 +103,7 @@ docker compose exec -T database psql -U edcom -c "CREATE DATABASE edcom;"
 docker compose exec -T database psql -U edcom edcom < /root/edcom_export_*.sql
 
 # Run new schema migrations
-docker cp schema/billing.sql edcom-database:/tmp/
+docker compose cp schema/billing.sql database:/tmp/billing.sql
 docker compose exec -T database psql -U edcom edcom -f /tmp/billing.sql
 
 # Restart all services
@@ -213,7 +213,7 @@ docker compose stop api tasks cron webhooks segments
 docker compose exec -T database psql -U edcom -c "DROP DATABASE edcom;"
 docker compose exec -T database psql -U edcom -c "CREATE DATABASE edcom;"
 docker compose exec -T database psql -U edcom edcom < /root/edcom_final_export.sql
-docker cp schema/billing.sql edcom-database:/tmp/
+docker compose cp schema/billing.sql database:/tmp/billing.sql
 docker compose exec -T database psql -U edcom edcom -f /tmp/billing.sql
 docker compose up -d
 ```

@@ -1,7 +1,9 @@
-# EmailDelivery.com
-[![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/emaildelivery/edcom-ce/blob/main/LICENSE)
+# SendMail.co.zw
+[![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-EmailDelivery.com is a self-hosted email marketing platform with a built-in MTA and a user experience comparable to SaaS ESPs like Maropost, Brevo, and AWeber.
+SendMail.co.zw is a self-hosted email marketing platform based on [EmailDelivery.com Community Edition](https://github.com/emaildelivery/edcom-ce), with a modernized React 18 frontend, billing/subscription system, and multi-brand theming.
+
+It is a self-hosted email marketing platform with a built-in MTA and a user experience comparable to SaaS ESPs like Maropost, Brevo, and AWeber.
 
 A key differentiator is **Postal Routes**: rules-based routing and load balancing across any mix of delivery backends, including ESP APIs (Amazon SES/SparkPost/Mailgun), SMTP relays, MTAs, and IP pools. 
 
@@ -157,22 +159,15 @@ Add an A record such as `esp.yourdomain.com` where your DNS records are hosted (
 
 You'll need to enter this domain and IP address during installation.  
 
-## Download the installation archive and run the setup wizard:
+## Install from source
 
-**Intel/AMD:**
 ```bash
-curl -LO https://github.com/emaildelivery/edcom-ce/releases/latest/download/edcom-install-amd64.tgz
-tar -xzvf edcom-install-amd64.tgz
+git clone https://github.com/webmaster-cyber/sendmailzw.git edcom-install
 cd edcom-install
-./ez_setup.sh 
+./install.sh
 ```
-**ARM/AArch64:** 
-```bash
-curl -LO https://github.com/emaildelivery/edcom-ce/releases/latest/download/edcom-install-arm64.tgz
-tar -xzvf edcom-install-arm64.tgz
-cd edcom-install
-./ez_setup.sh 
-```
+
+The install script will automatically install Docker, Node.js, and all dependencies, then build and start all services.
 
 ## Common installation issues
 Problem? See [this section](https://docs.emaildelivery.com/docs/common-installation-issues/dont-use-sudo) in the documentation.

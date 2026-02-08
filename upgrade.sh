@@ -34,7 +34,7 @@ echo "  Backup saved to: $BACKUP_FILE"
 echo ""
 echo "Step 3: Running database migrations..."
 if [[ -f "schema/billing.sql" ]]; then
-    docker cp schema/billing.sql edcom-database:/tmp/billing.sql
+    docker compose cp schema/billing.sql database:/tmp/billing.sql
     docker compose exec -T database psql -U edcom edcom -f /tmp/billing.sql
     echo "  Billing schema applied"
 fi

@@ -53,8 +53,8 @@ This repository is intended for developers who want to contribute to the platfor
 
 Clone the repository:
 ```bash
-git clone https://github.com/emaildelivery/edcom-ce.git
-cd edcom-ce
+git clone https://github.com/webmaster-cyber/sendmailzw.git
+cd sendmailzw
 ```
 
 Build the development environment:

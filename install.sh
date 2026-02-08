@@ -150,7 +150,7 @@ done
 # Run billing schema migration
 echo ""
 echo ">>> Running billing schema migration..."
-docker cp schema/billing.sql edcom-database:/tmp/
+docker compose cp schema/billing.sql database:/tmp/billing.sql
 docker compose exec -T database psql -U edcom edcom -f /tmp/billing.sql 2>/dev/null || true
 
 # Create admin account
