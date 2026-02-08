@@ -61,29 +61,20 @@ function injectHeatmap(html: string, linkclicks: number[]): string {
     <style>
       a[data-clicks] { position: relative !important; text-decoration: none; }
       a[data-clicks]::after {
-        content: attr(data-clicks) " clicks";
+        content: attr(data-clicks);
         position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 50%;
+        right: -6px;
+        transform: translate(100%, -50%);
         background: #1e293b;
         color: #fff;
-        font-size: 11px;
+        font-size: 10px;
         font-family: -apple-system, sans-serif;
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 2px 6px;
+        border-radius: 10px;
         white-space: nowrap;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.15s;
         z-index: 1000;
-      }
-      a[data-clicks]:hover::after {
-        opacity: 1;
-      }
-      a[data-clicks]:hover {
-        outline-width: 3px !important;
-        outline-color: rgba(37,99,235,0.6) !important;
+        line-height: 1.4;
       }
     </style>`
 
