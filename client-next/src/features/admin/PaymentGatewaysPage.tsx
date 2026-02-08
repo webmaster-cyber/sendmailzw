@@ -57,7 +57,7 @@ const EMPTY_STRIPE: GatewayFormData = {
 }
 
 export function PaymentGatewaysPage() {
-  const [gateways, setGateways] = useState<PaymentGatewayConfig[]>([])
+  const [, setGateways] = useState<PaymentGatewayConfig[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [paynow, setPaynow] = useState<GatewayFormData>(EMPTY_PAYNOW)
   const [stripe, setStripe] = useState<GatewayFormData>(EMPTY_STRIPE)

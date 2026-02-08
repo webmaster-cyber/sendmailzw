@@ -3,6 +3,9 @@ import { useAuth } from './contexts/AuthContext'
 import { useBrand } from './contexts/BrandContext'
 import { AppShell } from './components/layout/AppShell'
 import { LoginPage } from './features/auth/LoginPage'
+import { ResetPasswordPage } from './features/auth/ResetPasswordPage'
+import { ActivatePage } from './features/auth/ActivatePage'
+import { WelcomePage } from './features/auth/WelcomePage'
 import { AdminDashboard } from './features/dashboard/AdminDashboard'
 import { CustomerDashboard } from './features/dashboard/CustomerDashboard'
 import { BroadcastsPage } from './features/broadcasts/BroadcastsPage'
@@ -88,6 +91,7 @@ import { BillingPage } from './features/billing/BillingPage'
 import { InvoicesPage } from './features/billing/InvoicesPage'
 import { CheckoutPage } from './features/billing/CheckoutPage'
 import { Spinner } from './components/ui/Spinner'
+import ErrorBoundary from './components/feedback/ErrorBoundary'
 import { useEffect } from 'react'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -142,10 +146,14 @@ function ApplyUserBrand() {
 
 export default function App() {
   return (
-    <>
+    <ErrorBoundary>
       <ApplyUserBrand />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/reset" element={<ResetPasswordPage />} />
+        <Route path="/emailreset" element={<ResetPasswordPage />} />
+        <Route path="/activate" element={<ActivatePage />} />
+        <Route path="/welcome" element={<ProtectedRoute><WelcomePage /></ProtectedRoute>} />
         <Route
           path="/*"
           element={
@@ -244,6 +252,6 @@ export default function App() {
           }
         />
       </Routes>
-    </>
+    </ErrorBoundary>
   )
 }

@@ -331,6 +331,45 @@ Added visual theme editor with color pickers instead of requiring raw CSS knowle
 
 ---
 
+## 2026-02-08 — Pre-Deployment Audit & Gap Fixes
+
+### Full Codebase Audit ✅
+Ran 5 parallel audit agents across the entire codebase:
+- Routes & navigation: 86 routes, 80 page components, all sidebar links verified
+- Feature pages: all pages fully implemented, no stubs or placeholders
+- Shared components & hooks: comprehensive coverage, all core components present
+- Backend API: all 18 new endpoints registered, billing schema complete, webhook handlers in place
+- Marketing site & deployment: all 7 pages, SEO setup, deployment scripts ready
+
+### Auth Pages Added ✅
+- `ResetPasswordPage.tsx` - Forgot password (enter email) and reset with key (from email link) flows
+- `ActivatePage.tsx` - Account activation for self-signup users with resend code support
+- `WelcomePage.tsx` - Post-signup password setup, redirects to dashboard on completion
+- Routes: `/reset`, `/emailreset` (public), `/activate` (public), `/welcome` (protected)
+- All pages match LoginPage styling (centered card on branded background)
+
+### ErrorBoundary Added ✅
+- `src/components/feedback/ErrorBoundary.tsx` - React class component for crash handling
+- Shows friendly error card with reload button and dashboard link
+- Wraps entire app in `App.tsx`
+
+### Route Constants Fixed ✅
+- Fixed 14 stale path constants (e.g. `/customers` → `/admin/customers`)
+- Removed 3 dead constants (ZAPIER, PABBLY, old WELCOME)
+- Added 50+ missing constants for all sub-routes
+- Every constant now has 1:1 match with App.tsx routes
+
+### Marketing Site .env Fixed ✅
+- `PUBLIC_APP_URL` and `PUBLIC_API_URL` corrected from `localhost:5173` to `localhost:3000`
+- Added documentation comments for `PUBLIC_SIGNUP_ID` configuration
+
+### TypeScript Fixes ✅
+- Fixed unused `gateways` variable in `PaymentGatewaysPage.tsx`
+- Removed unused `toast` import in `BillingPage.tsx`
+- Both projects compile cleanly (zero errors)
+
+---
+
 ## Production Server Reference
 - IP: `92.119.124.102`
 - Install path: `/root/edcom-install/`
