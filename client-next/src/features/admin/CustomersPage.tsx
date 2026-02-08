@@ -82,7 +82,12 @@ export function CustomersPage() {
     else setIsRefreshing(true)
     try {
       const [customersRes, routesRes] = await Promise.all([
-        api.get<Customer[]>('/api/companies'),
+        api.get<Customer[]>('/api/companies', {
+          params: {
+            start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+            end: new Date().toISOString(),
+          },
+        }),
         api.get<PostalRoute[]>('/api/routes'),
       ])
       setCustomers(customersRes.data)
