@@ -102,6 +102,9 @@ ENDJSON
 echo "PLATFORM_IP=$IP_ADDRESS" > .env
 echo "PLATFORM_IP=$IP_ADDRESS" > config/edcom.env
 
+# Remove dev override files (they add profiles that prevent production startup)
+rm -f docker-compose.override.yml docker-compose.override.amd64.yml
+
 # Redis optimization
 echo "vm.overcommit_memory=1" | tee /etc/sysctl.d/99-edcom.conf >/dev/null
 sysctl -w vm.overcommit_memory=1 >/dev/null 2>&1 || true
