@@ -50,13 +50,18 @@ fi
 echo "    All dependencies installed."
 echo ""
 
-# Collect IP and domain
+# Collect all configuration upfront
 read -rp "Enter server IP address: " IP_ADDRESS
 read -rp "Enter app domain (e.g. app.sendmail.co.zw): " DOMAIN
+echo ""
+read -rp "Beefree license key (leave blank to skip): " LICENSE_KEY
 
 echo ""
 echo "  IP: $IP_ADDRESS"
 echo "  Domain: $DOMAIN"
+if [[ -n "$LICENSE_KEY" ]]; then
+echo "  License: $LICENSE_KEY"
+fi
 echo ""
 read -rp "Correct? [y/n]: " CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
@@ -101,6 +106,11 @@ ENDJSON
 
 echo "PLATFORM_IP=$IP_ADDRESS" > .env
 echo "PLATFORM_IP=$IP_ADDRESS" > config/edcom.env
+
+if [[ -n "$LICENSE_KEY" ]]; then
+    echo "$LICENSE_KEY" > config/commercial_license.key
+    echo "    License key saved."
+fi
 
 # Remove dev override files (they add profiles that prevent production startup)
 rm -f docker-compose.override.yml docker-compose.override.amd64.yml
@@ -180,7 +190,6 @@ echo "  IP URL:  http://$IP_ADDRESS"
 echo ""
 echo "  Next steps:"
 echo "    1. Import database from old server (see docs/cutover-plan.md)"
-echo "    2. Add license key to config/commercial_license.key"
-echo "    3. Run ./enable_multisite.sh for marketing site"
-echo "    4. Set up SSL with ./generate_multisite_certificate.sh"
+echo "    2. Run ./enable_multisite.sh for marketing site"
+echo "    3. Set up SSL with ./generate_multisite_certificate.sh"
 echo ""
