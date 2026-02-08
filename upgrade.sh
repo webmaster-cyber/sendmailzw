@@ -60,6 +60,7 @@ echo ""
 echo "Step 5: Building client-next..."
 if [[ -d "client-next" ]]; then
     cd client-next
+    rm -f tsconfig.tsbuildinfo tsconfig.*.tsbuildinfo
     npm install
     npm run build
     cd ..
