@@ -162,7 +162,13 @@ echo "=============================="
 echo "  Create Administrator Account"
 echo "=============================="
 echo ""
-./create_admin.sh
+read -rp "Admin email address: " ADMIN_EMAIL
+read -rp "Your name: " ADMIN_NAME
+read -rp "Company name: " ADMIN_COMPANY
+read -srp "Password: " ADMIN_PASS
+echo ""
+
+docker exec -i edcom-api python /scripts/create_admin.py "$ADMIN_EMAIL" "$ADMIN_NAME" "$ADMIN_COMPANY" --password "$ADMIN_PASS"
 
 echo ""
 echo "=============================="
