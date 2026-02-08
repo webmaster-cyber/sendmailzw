@@ -95,8 +95,6 @@ services:
       - PORT=4321
     volumes:
       - "./marketing:/app"
-    profiles:
-      - marketing
 
   proxy:
     image: edcom/proxy
@@ -108,6 +106,7 @@ services:
       - "${PLATFORM_IP}:443:443"
     depends_on:
       - api
+      - marketing
     volumes:
       - "./client-next/dist:/usr/share/nginx/html"
       - "./data/buckets/images:/usr/share/nginx/html/i"

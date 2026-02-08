@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # SendMail Upgrade Script
-# Pulls latest code, runs migrations, builds client, and restarts services
+# Pulls latest code, rebuilds images, builds client, and restarts all services
 
 set -e
 
@@ -40,7 +40,12 @@ if [[ -f "schema/billing.sql" ]]; then
 fi
 
 echo ""
-echo "Step 4: Building client-next..."
+echo "Step 4: Rebuilding API image..."
+docker build --no-cache -t edcom/api -f services/api.Dockerfile .
+echo "  API image rebuilt"
+
+echo ""
+echo "Step 5: Building client-next..."
 if [[ -d "client-next" ]]; then
     cd client-next
     npm install
@@ -54,7 +59,7 @@ fi
 # Update marketing site if it exists
 if [[ -d "marketing" ]]; then
     echo ""
-    echo "Step 5: Updating marketing site..."
+    echo "Step 6: Updating marketing site..."
     cd marketing
     git pull origin main 2>/dev/null || echo "  Marketing site not a git repo, skipping pull"
     npm install
@@ -63,11 +68,11 @@ if [[ -d "marketing" ]]; then
 fi
 
 echo ""
-echo "Step 6: Restarting services..."
-docker compose restart
+echo "Step 7: Restarting all services..."
+docker compose up -d --force-recreate
 
 echo ""
-echo "Step 7: Waiting for services to start..."
+echo "Step 8: Waiting for services to start..."
 for i in $(seq 1 30); do
     if docker compose exec -T database pg_isready -U edcom > /dev/null 2>&1; then
         break
@@ -76,12 +81,14 @@ for i in $(seq 1 30); do
 done
 
 echo ""
-echo "Step 8: Health check..."
+echo "Step 9: Health check..."
+sleep 5
 if docker compose ps | grep -q "unhealthy\|Restarting"; then
     echo "  Warning: Some containers report issues"
     docker compose ps
 else
     echo "  All containers running"
+    docker compose ps
 fi
 
 echo ""
