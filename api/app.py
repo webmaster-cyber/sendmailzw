@@ -343,7 +343,11 @@ class Ping(object):
         self.on_post(req, resp)
 
 
-def _branded_email(brand_name: str, brand_color: str, content: str) -> str:
+def _branded_email(brand_name: str, brand_color: str, logo_url: str, content: str) -> str:
+    if logo_url:
+        logo_html = '<img src="%s" alt="%s" height="36" style="height:36px;max-width:180px;display:block;margin:0 auto">' % (logo_url, brand_name)
+    else:
+        logo_html = '<span style="font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.3px">%s</span>' % brand_name
     return """<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -351,8 +355,8 @@ def _branded_email(brand_name: str, brand_color: str, content: str) -> str:
 <table role="presentation" width="100%%" cellpadding="0" cellspacing="0" style="background-color:#f4f5f7">
 <tr><td align="center" style="padding:40px 20px">
 <table role="presentation" width="100%%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
-<tr><td style="background-color:%s;padding:28px 40px;text-align:center">
-<span style="font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.3px">%s</span>
+<tr><td style="background-color:%s;padding:24px 40px;text-align:center">
+%s
 </td></tr>
 <tr><td style="padding:36px 40px 40px">
 %s
@@ -364,7 +368,7 @@ def _branded_email(brand_name: str, brand_color: str, content: str) -> str:
 </td></tr>
 </table>
 </body>
-</html>""" % (brand_color, brand_name, content, brand_name)
+</html>""" % (brand_color, logo_html, content, brand_name)
 
 
 def send_signup_email(
@@ -378,6 +382,7 @@ def send_signup_email(
 ) -> None:
     brand_name = frontend.get("name", "SendMail")
     brand_color = "#006FC2"
+    logo_url = "%s/logo-white.png" % get_webroot()
     activate_url = "%s/activate?username=%s" % (get_webroot(), urllib.parse.quote(username))
 
     content = """
@@ -402,7 +407,7 @@ def send_signup_email(
                 (("%s %s" % (firstname, lastname)).strip(), username)
             ),
             subject,
-            _branded_email(brand_name, brand_color, content),
+            _branded_email(brand_name, brand_color, logo_url, content),
         )
     except Exception as e:
         log.exception("Error sending email")
@@ -676,6 +681,7 @@ class SendResetEmail(object):
 
             brand_name = frontend.get("name", "SendMail")
             brand_color = "#006FC2"
+            logo_url = "%s/logo-white.png" % get_webroot()
             reset_url = "%s/emailreset?key=%s" % (get_webroot(), tempid)
 
             content = """
@@ -693,7 +699,7 @@ class SendResetEmail(object):
                     frontend,
                     email,
                     "Reset password request",
-                    _branded_email(brand_name, brand_color, content),
+                    _branded_email(brand_name, brand_color, logo_url, content),
                 )
             except Exception as e:
                 log.exception("Error sending email")
