@@ -17,6 +17,7 @@ export interface User {
   software_version?: string
   disabled?: boolean
   banned?: boolean
+  inreview?: boolean
   apikey?: string
   smtphost?: string
 }

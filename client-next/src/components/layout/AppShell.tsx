@@ -57,9 +57,21 @@ export function AppShell({ children }: AppShellProps) {
           {impersonate && user && (
             <ImpersonationBanner />
           )}
+          {user?.inreview && !impersonate && (
+            <PendingApprovalBanner />
+          )}
           {children}
         </main>
       </div>
+    </div>
+  )
+}
+
+function PendingApprovalBanner() {
+  return (
+    <div className="mb-4 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+      <strong>Account pending approval</strong> — Your account is being reviewed by our team.
+      You can explore the platform, but sending is disabled until your account is approved.
     </div>
   )
 }
