@@ -79,12 +79,20 @@ if [[ -d "marketing" ]]; then
     cd ..
 fi
 
+# Update nginx config if multisite is active
+if [[ -f "config/nginx.ssl.multisite.conf" ]] && grep -q "marketing" config/nginx.ssl.conf 2>/dev/null; then
+    echo ""
+    echo "Step 7: Updating nginx config..."
+    cp config/nginx.ssl.multisite.conf config/nginx.ssl.conf
+    echo "  Multisite nginx config updated"
+fi
+
 echo ""
-echo "Step 7: Restarting all services..."
+echo "Step 8: Restarting all services..."
 docker compose up -d --force-recreate
 
 echo ""
-echo "Step 8: Waiting for services to be ready..."
+echo "Step 9: Waiting for services to be ready..."
 echo -n "  "
 READY=false
 for i in $(seq 1 60); do
