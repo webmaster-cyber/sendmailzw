@@ -343,6 +343,30 @@ class Ping(object):
         self.on_post(req, resp)
 
 
+def _branded_email(brand_name: str, brand_color: str, content: str) -> str:
+    return """<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background-color:#f4f5f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+<table role="presentation" width="100%%" cellpadding="0" cellspacing="0" style="background-color:#f4f5f7">
+<tr><td align="center" style="padding:40px 20px">
+<table role="presentation" width="100%%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+<tr><td style="background-color:%s;padding:28px 40px;text-align:center">
+<span style="font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.3px">%s</span>
+</td></tr>
+<tr><td style="padding:36px 40px 40px">
+%s
+</td></tr>
+<tr><td style="padding:0 40px 32px;text-align:center">
+<p style="margin:0;font-size:12px;color:#9ca3af">%s &mdash; Reliable email delivery for your business</p>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>""" % (brand_color, brand_name, content, brand_name)
+
+
 def send_signup_email(
     db: DB,
     frontend: JsonObj,
@@ -352,6 +376,24 @@ def send_signup_email(
     subject: str,
     code: str,
 ) -> None:
+    brand_name = frontend.get("name", "SendMail")
+    brand_color = "#006FC2"
+    activate_url = "%s/activate?username=%s" % (get_webroot(), urllib.parse.quote(username))
+
+    content = """
+<p style="margin:0 0 20px;font-size:16px;color:#1e293b;line-height:1.6">Hello %s,</p>
+<p style="margin:0 0 24px;font-size:15px;color:#475569;line-height:1.6">Thank you for signing up. Enter the code below on the activation page to complete your registration:</p>
+<div style="text-align:center;margin:0 0 24px">
+<div style="display:inline-block;background-color:#f1f5f9;border:2px dashed #cbd5e1;border-radius:8px;padding:16px 32px">
+<span style="font-size:28px;font-weight:700;letter-spacing:4px;color:#1e293b">%s</span>
+</div>
+</div>
+<div style="text-align:center;margin:0 0 28px">
+<a href="%s" style="display:inline-block;background-color:%s;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px">Activate Account</a>
+</div>
+<p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.5">If you did not request this, please ignore this email.</p>
+""" % (firstname, code, activate_url, brand_color)
+
     try:
         send_internal_txn(
             db,
@@ -360,18 +402,7 @@ def send_signup_email(
                 (("%s %s" % (firstname, lastname)).strip(), username)
             ),
             subject,
-            """<html><body>
-<p>Hello %s!</p><p>This email is in response to a request to join %s. To complete your registration, enter the following code in the <a href="%s/activate?username=%s">activation page</a>:</p>
-<p style="text-align: center"><b>%s</b></p>
-<p>If you did not request this message, please disregard it.</p>
-</body></html>"""
-            % (
-                firstname,
-                get_webhost(),
-                get_webroot(),
-                urllib.parse.quote(username),
-                code,
-            ),
+            _branded_email(brand_name, brand_color, content),
         )
     except Exception as e:
         log.exception("Error sending email")
@@ -643,18 +674,26 @@ class SendResetEmail(object):
                 {"resetid": tempid, "resettime": datetime.utcnow().isoformat() + "Z"},
             )
 
+            brand_name = frontend.get("name", "SendMail")
+            brand_color = "#006FC2"
+            reset_url = "%s/emailreset?key=%s" % (get_webroot(), tempid)
+
+            content = """
+<p style="margin:0 0 20px;font-size:16px;color:#1e293b;line-height:1.6">Hello,</p>
+<p style="margin:0 0 24px;font-size:15px;color:#475569;line-height:1.6">We received a request to reset your password for %s. Click the button below to choose a new password:</p>
+<div style="text-align:center;margin:0 0 28px">
+<a href="%s" style="display:inline-block;background-color:%s;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px">Reset Password</a>
+</div>
+<p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.5">If you did not request this, please ignore this email. Your password will remain unchanged.</p>
+""" % (frontendname, reset_url, brand_color)
+
             try:
                 send_internal_txn(
                     db,
                     frontend,
                     email,
                     "Reset password request",
-                    """<html><body>
-<p>This email is in response to a password reset request for %s.</p>
-<p><a href="%s/emailreset?key=%s">Complete your password reset now.</a></p>
-<p>If you did not request this message, please disregard it. Thank you.</p>
-</body></html>"""
-                    % (frontendname, get_webroot(), tempid),
+                    _branded_email(brand_name, brand_color, content),
                 )
             except Exception as e:
                 log.exception("Error sending email")
