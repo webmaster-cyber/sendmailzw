@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# SendMail.co.zw — Setup from source
+# SendMail.co.zw — Install from source
 # Run as root from the edcom-install directory
 
 if [[ $UID -ne 0 ]]; then
@@ -9,7 +9,7 @@ if [[ $UID -ne 0 ]]; then
     exit 1
 fi
 
-if [[ ! -f "setup_from_source.sh" ]]; then
+if [[ ! -f "install.sh" ]]; then
     echo "Run this script from the edcom-install directory"
     exit 1
 fi

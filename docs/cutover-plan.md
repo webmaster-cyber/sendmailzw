@@ -74,38 +74,23 @@ rsync -avz data/buckets/ root@NEW_SERVER_IP:/root/edcom-install/data/buckets/
 
 ## Phase 3: Setup New Server
 
-### 3.1 Run Initial Setup
+### 3.1 Run Install Script
 ```bash
 # On NEW server
 cd /root/edcom-install
 
-# Run the setup wizard
-./ez_setup.sh
+# Run the install script
+./install.sh
 ```
 
 This will:
 - Prompt for IP address and domain
-- Create initial configuration
+- Create directories and configuration
+- Build all Docker images from source (including client-next)
+- Install Node.js and build the React frontend
 - Start all containers
+- Run database migrations
 - Create an admin account (temporary - will be replaced by imported data)
-
-### 3.1b Build Client-Next
-```bash
-# Install Node.js (if not already installed)
-curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-apt install -y nodejs
-
-# Build the new React client
-cd /root/edcom-install/client-next
-npm install
-npm run build
-cd ..
-
-# Verify build output exists
-ls -la client-next/dist/
-```
-
-The built client is automatically served by nginx via volume mount in docker-compose.yml.
 
 ### 3.2 Import Database
 ```bash
@@ -282,15 +267,6 @@ crontab -e
 # Add to crontab for certificate renewal
 0 0 */30 * * cd /root/edcom-install && certbot renew --quiet
 ```
-
-### 7.5 Old Client Cleanup (Optional)
-The old `client/` directory is no longer used. The new React client (`client-next/`) is built and served via volume mount. You can safely ignore or remove the old client:
-```bash
-# Remove old client (optional - keeps repo cleaner)
-rm -rf /root/edcom-install/client/
-```
-
-**Note:** The old client is still in the git repo for reference but is not deployed.
 
 ---
 

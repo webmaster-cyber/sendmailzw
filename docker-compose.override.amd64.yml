@@ -128,30 +128,10 @@ services:
       context: .
       dockerfile: services/proxy-dev.Dockerfile
     volumes:
-      - "./client/public/fonts:/usr/share/nginx/html/fonts"
     profiles:
       - lite
       - full
 
-  client:
-    image: edcom/client
-    platform: linux/amd64
-    container_name: edcom-client
-    build:
-      context: .
-      dockerfile: services/client.Dockerfile
-    volumes:
-      - "./client/src:/client/src"
-      - "./client/public:/client/public"
-      - "./client/scripts:/client/scripts"
-      - "./data/buckets/images:/client/public/i"
-      - "./data/buckets/transfer:/client/public/transfer"
-      - "./client/package.json:/client/package.json"
-    ports:
-      - "3000:3000"
-    profiles:
-      - lite
-      - full
 
   velocity:
     image: edcom/velocity-dev

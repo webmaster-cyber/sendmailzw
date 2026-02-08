@@ -1,7 +1,0 @@
-@media all and (min-width: 1200px) {
-    .title-page.justify-with-ed-table .row-wrapper {
-        margin-left: calc(4% - 15px);
-        margin-right: auto;
-        max-width: 1060px;
-    }
-}

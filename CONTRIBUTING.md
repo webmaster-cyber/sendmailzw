@@ -59,7 +59,6 @@ cd edcom-ce
 
 Build the development environment:
 ```bash
-dev/build_node_base.sh
 dev/build_python_base.sh
 docker compose build
 ```
@@ -151,7 +150,7 @@ After launching, create an admin user:
 
 ```
 api/           - Python backend: API server, background tasks, cron jobs
-client/        - React SPA: user interface
+client-next/   - React 18 SPA (Vite + TypeScript + Tailwind)
 config/        - Default configuration files
 data/          - Ephemeral runtime data (e.g., database, uploads, logs)
 dev/           - Developer utilities and setup scripts

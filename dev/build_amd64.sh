@@ -125,8 +125,6 @@ docker image build . -f services/database.Dockerfile --tag edcom/database:latest
 docker image build . -f services/api.Dockerfile --tag edcom/api:latest --platform $PLATFORM
 docker image build smtprelay --tag edcom/smtprelay:latest --platform $PLATFORM
 docker image build screenshot --tag edcom/screenshot:latest --platform $PLATFORM
-docker image build . -f services/client-build.Dockerfile --tag edcom/client-build:latest --platform $PLATFORM
-docker run --rm --platform $PLATFORM -v $PWD/client/src:/client/src -v $PWD/client/public:/client/public -v $PWD/client/build:/client/build edcom/client-build:latest
 docker image build . -f services/proxy.Dockerfile --tag edcom/proxy:latest --platform $PLATFORM
 docker image build velocity --tag edcom/velocity:latest --platform $PLATFORM
 
