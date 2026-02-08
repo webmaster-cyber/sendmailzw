@@ -36,7 +36,7 @@ interface ClientStats {
 }
 
 function num(n: number): string {
-  return n.toLocaleString()
+  return (n ?? 0).toLocaleString()
 }
 
 function pct(value: number, total: number): string {
@@ -238,7 +238,7 @@ function StatsTable({ items }: { items: { label: string; count: number }[] }) {
           <div className="flex-1 min-w-0">
             <div className="flex justify-between mb-0.5">
               <span className="text-text-secondary truncate">{item.label}</span>
-              <span className="text-text-muted shrink-0 ml-2">{item.count.toLocaleString()}</span>
+              <span className="text-text-muted shrink-0 ml-2">{(item.count ?? 0).toLocaleString()}</span>
             </div>
             <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
               <div

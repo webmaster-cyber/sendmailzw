@@ -163,7 +163,7 @@ export function AdminDashboard() {
   }, [loadDashboard])
 
   const formatNumber = (num: number) => {
-    return num.toLocaleString()
+    return (num ?? 0).toLocaleString()
   }
 
   const getDeliveryRate = () => {

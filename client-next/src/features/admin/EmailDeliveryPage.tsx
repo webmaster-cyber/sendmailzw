@@ -73,7 +73,7 @@ export function EmailDeliveryPage() {
   }, [reload])
 
   const formatNumber = (num: number) => {
-    return num.toLocaleString()
+    return (num ?? 0).toLocaleString()
   }
 
   const renderChart = (

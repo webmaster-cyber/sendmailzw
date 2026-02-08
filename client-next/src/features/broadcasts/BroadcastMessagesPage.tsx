@@ -74,7 +74,7 @@ export function BroadcastMessagesPage() {
               {messages.map((m, i) => (
                 <tr key={i} className="border-b border-border last:border-0 hover:bg-gray-50">
                   <td className="px-4 py-2 text-text-secondary text-xs break-all">{m.msg}</td>
-                  <td className="px-4 py-2 text-right font-medium text-text-primary">{m.count.toLocaleString()}</td>
+                  <td className="px-4 py-2 text-right font-medium text-text-primary">{(m.count ?? 0).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

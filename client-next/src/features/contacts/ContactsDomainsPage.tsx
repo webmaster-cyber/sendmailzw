@@ -210,7 +210,7 @@ export function ContactsDomainsPage() {
                           {domain.domain}
                         </td>
                         <td className="px-4 py-2 text-right text-sm text-text-secondary">
-                          {domain.count.toLocaleString()}
+                          {(domain.count ?? 0).toLocaleString()}
                         </td>
                         <td className="px-4 py-2 text-right text-sm text-text-muted">
                           {pct}%

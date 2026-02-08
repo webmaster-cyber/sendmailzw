@@ -105,7 +105,7 @@ export function ContactsPage() {
     setConfirmDialog({
       open: true,
       title: 'Delete List',
-      message: `Are you sure you want to delete "${list.name}"? This will remove all ${list.count.toLocaleString()} contacts from this list.`,
+      message: `Are you sure you want to delete "${list.name}"? This will remove all ${(list.count ?? 0).toLocaleString()} contacts from this list.`,
       confirmLabel: 'Delete',
       onConfirm: async () => {
         await api.delete(`/api/lists/${list.id}`)
@@ -341,12 +341,12 @@ function ListCard({ list, actions, formatPct }: ListCardProps) {
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
           <span className="text-text-muted">Total Contacts</span>
-          <span className="font-medium text-text-primary">{list.count.toLocaleString()}</span>
+          <span className="font-medium text-text-primary">{(list.count ?? 0).toLocaleString()}</span>
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-text-muted">Active</span>
           <span className="font-medium text-success">
-            {list.active.toLocaleString()} ({formatPct(list.active, list.count)})
+            {(list.active ?? 0).toLocaleString()} ({formatPct(list.active, list.count)})
           </span>
         </div>
 
@@ -372,7 +372,7 @@ function ListCard({ list, actions, formatPct }: ListCardProps) {
         {/* Domains */}
         {list.domaincount > 0 && (
           <div className="border-t border-border pt-2 text-xs">
-            <span className="text-text-muted">{list.domaincount.toLocaleString()} domains</span>
+            <span className="text-text-muted">{(list.domaincount ?? 0).toLocaleString()} domains</span>
           </div>
         )}
       </div>
@@ -425,7 +425,7 @@ function StatItem({
   return (
     <div className="flex items-center justify-between">
       <span className="text-text-muted">{label}</span>
-      <span className={`font-medium ${colors[variant]}`}>{value.toLocaleString()}</span>
+      <span className={`font-medium ${colors[variant]}`}>{(value ?? 0).toLocaleString()}</span>
     </div>
   )
 }

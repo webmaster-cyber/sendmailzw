@@ -371,7 +371,7 @@ export function ContactsFindPage() {
 
   // Bulk delete
   const handleBulkDelete = () => {
-    const count = selectAll ? search.total : selected.size
+    const count = selectAll ? (search.total ?? 0) : selected.size
     setConfirmDialog({
       open: true,
       title: 'Delete Contacts',
@@ -635,7 +635,7 @@ export function ContactsFindPage() {
   )
 
   const hasSelection = selected.size > 0 || selectAll
-  const selectionCount = selectAll ? search.total : selected.size
+  const selectionCount = selectAll ? (search.total ?? 0) : selected.size
 
   return (
     <div>
@@ -651,7 +651,7 @@ export function ContactsFindPage() {
           <h1 className="text-xl font-semibold text-text-primary">Find Contacts</h1>
           {list && (
             <p className="text-sm text-text-muted">
-              {list.name} - {list.count.toLocaleString()} contacts
+              {list.name} - {(list.count ?? 0).toLocaleString()} contacts
             </p>
           )}
         </div>
@@ -875,7 +875,7 @@ export function ContactsFindPage() {
               {/* Pagination */}
               <div className="flex items-center justify-between border-t border-border px-4 py-3">
                 <span className="text-sm text-text-muted">
-                  Showing {search.results.length} of {search.total.toLocaleString()} contacts
+                  Showing {search.results.length} of {(search.total ?? 0).toLocaleString()} contacts
                 </span>
                 <div className="flex gap-2">
                   <Button

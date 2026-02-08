@@ -329,10 +329,10 @@ export function BroadcastsPage() {
             {/* Metrics row */}
             {(status === 'Complete' || status === 'Sending') && b.send > 0 && (
               <div className="mt-2 flex gap-4 text-xs">
-                <Metric label="Delivered" value={b.send.toLocaleString()} />
+                <Metric label="Delivered" value={(b.send ?? 0).toLocaleString()} />
                 <Metric label="Opened" value={formatPct(pct(b, b.opened, 'send'))} />
                 <Metric label="Clicked" value={formatPct(pct(b, b.clicked, 'send'))} />
-                <Metric label="Unsubs" value={b.unsubscribed.toLocaleString()} />
+                <Metric label="Unsubs" value={(b.unsubscribed ?? 0).toLocaleString()} />
                 <Metric label="Bounced" value={formatPct(pct(b, b.bounced, 'delivered'))} />
               </div>
             )}

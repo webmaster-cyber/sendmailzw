@@ -16,7 +16,7 @@ function UsageMeter({ label, used, limit }: { label: string; used: number; limit
       <div className="mb-1 flex items-center justify-between text-sm">
         <span className="text-text-secondary">{label}</span>
         <span className="font-medium">
-          {used.toLocaleString()} {limit ? `/ ${limit.toLocaleString()}` : '(unlimited)'}
+          {(used ?? 0).toLocaleString()} {limit ? `/ ${limit.toLocaleString()}` : '(unlimited)'}
         </span>
       </div>
       {limit && (

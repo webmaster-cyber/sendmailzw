@@ -108,7 +108,7 @@ export function BroadcastHeatmapPage() {
           {data.clicked_all > 0 && (
             <div className="mt-3 pt-3 border-t border-border flex justify-between text-xs">
               <span className="text-text-muted">Total Clicks</span>
-              <span className="font-medium text-text-primary">{data.clicked_all.toLocaleString()}</span>
+              <span className="font-medium text-text-primary">{(data.clicked_all ?? 0).toLocaleString()}</span>
             </div>
           )}
         </div>

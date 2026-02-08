@@ -69,7 +69,7 @@ export function FunnelMessageStatsPage() {
         <div>
           <p className="text-sm text-text-muted">{label}</p>
           <p className="text-2xl font-semibold text-text-primary">
-            {value.toLocaleString()}
+            {(value ?? 0).toLocaleString()}
             {rate && <span className="ml-2 text-sm font-normal text-text-muted">{rate}</span>}
           </p>
         </div>
@@ -180,29 +180,29 @@ export function FunnelMessageStatsPage() {
                             {stat.domain}
                           </td>
                           <td className="px-4 py-3 text-right text-sm text-text-secondary">
-                            {stat.sent.toLocaleString()}
+                            {(stat.sent ?? 0).toLocaleString()}
                           </td>
                           <td className="px-4 py-3 text-right text-sm text-text-secondary">
-                            {stat.delivered.toLocaleString()}
+                            {(stat.delivered ?? 0).toLocaleString()}
                             <span className="ml-1 text-xs text-text-muted">
                               ({calcRate(stat.delivered, stat.sent)})
                             </span>
                           </td>
                           <td className="px-4 py-3 text-right text-sm text-text-secondary">
-                            {stat.opened.toLocaleString()}
+                            {(stat.opened ?? 0).toLocaleString()}
                             <span className="ml-1 text-xs text-text-muted">
                               ({calcRate(stat.opened, stat.sent)})
                             </span>
                           </td>
                           <td className="px-4 py-3 text-right text-sm text-text-secondary">
-                            {stat.clicked.toLocaleString()}
+                            {(stat.clicked ?? 0).toLocaleString()}
                             <span className="ml-1 text-xs text-text-muted">
                               ({calcRate(stat.clicked, stat.sent)})
                             </span>
                           </td>
                           <td className="px-4 py-3 text-right text-sm">
                             <span className={stat.bounced > 0 ? 'text-danger' : 'text-text-secondary'}>
-                              {stat.bounced.toLocaleString()}
+                              {(stat.bounced ?? 0).toLocaleString()}
                             </span>
                           </td>
                         </tr>

@@ -418,7 +418,7 @@ export function ContactEditPage() {
                         <p className="text-sm text-text-muted">
                           Showing {(activityPage - 1) * activityPageSize + 1} -{' '}
                           {Math.min(activityPage * activityPageSize, activityTotal)} of{' '}
-                          {activityTotal.toLocaleString()}
+                          {(activityTotal ?? 0).toLocaleString()}
                         </p>
                         <div className="flex gap-2">
                           <Button

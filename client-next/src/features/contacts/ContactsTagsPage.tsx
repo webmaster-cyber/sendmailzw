@@ -75,7 +75,7 @@ export function ContactsTagsPage() {
     setConfirmDialog({
       open: true,
       title: 'Delete Tag',
-      message: `Are you sure you want to delete the tag "${tag.tag}"? This will remove the tag from ${tag.count.toLocaleString()} contacts.`,
+      message: `Are you sure you want to delete the tag "${tag.tag}"? This will remove the tag from ${(tag.count ?? 0).toLocaleString()} contacts.`,
       confirmLabel: 'Delete',
       onConfirm: async () => {
         await api.delete(`/api/alltags/${encodeURIComponent(tag.tag)}`)
@@ -178,7 +178,7 @@ export function ContactsTagsPage() {
                         </span>
                       </td>
                       <td className="px-4 py-2 text-right text-sm text-text-secondary">
-                        {tag.count.toLocaleString()}
+                        {(tag.count ?? 0).toLocaleString()}
                       </td>
                       <td className="px-4 py-2 text-right text-sm text-text-muted">
                         {format(new Date(tag.added), 'MMM d, yyyy')}

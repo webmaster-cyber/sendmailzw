@@ -76,7 +76,7 @@ export function BroadcastDetailsPage() {
             <span className="text-sm text-text-muted">— {domain}</span>
           )}
           {data && (
-            <span className="ml-auto text-xs text-text-muted">{data.total.toLocaleString()} total</span>
+            <span className="ml-auto text-xs text-text-muted">{(data.total ?? 0).toLocaleString()} total</span>
           )}
         </div>
       </div>

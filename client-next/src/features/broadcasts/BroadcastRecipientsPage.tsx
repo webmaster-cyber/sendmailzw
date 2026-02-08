@@ -359,7 +359,7 @@ function StatBox({ label, value, highlight }: { label: string; value: number; hi
   return (
     <div className={`rounded-md border p-3 text-center ${highlight ? 'border-primary bg-primary/5' : 'border-border'}`}>
       <p className={`text-lg font-semibold ${highlight ? 'text-primary' : 'text-text-primary'}`}>
-        {value.toLocaleString()}
+        {(value ?? 0).toLocaleString()}
       </p>
       <p className="text-xs text-text-muted">{label}</p>
     </div>

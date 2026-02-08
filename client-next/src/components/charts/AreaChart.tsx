@@ -72,7 +72,7 @@ export function AreaChart({
               borderRadius: '6px',
               fontSize: '12px',
             }}
-            formatter={(value: number) => [value.toLocaleString(), 'Subscribers']}
+            formatter={(value: number) => [(value ?? 0).toLocaleString(), 'Subscribers']}
             labelFormatter={(label: string) => label}
           />
           <defs>

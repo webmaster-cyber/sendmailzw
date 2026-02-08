@@ -104,7 +104,7 @@ export function BroadcastDomainsPage() {
               {sorted.map((d) => (
                 <tr key={d.domain} className="border-b border-border last:border-0 hover:bg-gray-50">
                   <td className="px-3 py-2 font-medium text-text-primary">{d.domain}</td>
-                  <td className="px-3 py-2 text-right text-text-secondary">{d.count.toLocaleString()}</td>
+                  <td className="px-3 py-2 text-right text-text-secondary">{(d.count ?? 0).toLocaleString()}</td>
                   <td className="px-3 py-2 text-right text-text-secondary">{pct(d.send, d.count)}</td>
                   <td className="px-3 py-2 text-right">
                     <button onClick={() => navigate(`/broadcasts/details?id=${id}&cmd=open&domain=${d.domain}`)} className="text-primary hover:underline">

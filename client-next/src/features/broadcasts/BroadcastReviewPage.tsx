@@ -157,7 +157,7 @@ export function BroadcastReviewPage() {
               <SummaryRow label="Suppression" value={getItemNames(data.supplists!, supplists).join(', ')} />
             )}
             {data.last_calc && (
-              <SummaryRow label="Est. Recipients" value={data.last_calc.remaining.toLocaleString()} />
+              <SummaryRow label="Est. Recipients" value={(data.last_calc.remaining ?? 0).toLocaleString()} />
             )}
           </div>
           <button

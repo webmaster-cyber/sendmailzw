@@ -434,21 +434,21 @@ export function CustomerListApprovalPage() {
                         <div className="text-xs">
                           <div className="flex justify-between">
                             <span className="text-text-muted">Do Not Send:</span>
-                            <span>{list.validation.result.do_not_send.toLocaleString()}</span>
+                            <span>{(list.validation.result.do_not_send ?? 0).toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-text-muted">Undeliverable:</span>
-                            <span>{list.validation.result.undeliverable.toLocaleString()}</span>
+                            <span>{(list.validation.result.undeliverable ?? 0).toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-text-muted">Deliverable:</span>
                             <span className="text-success">
-                              {list.validation.result.deliverable.toLocaleString()}
+                              {(list.validation.result.deliverable ?? 0).toLocaleString()}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-text-muted">Unknown:</span>
-                            <span>{list.validation.result.unknown.toLocaleString()}</span>
+                            <span>{(list.validation.result.unknown ?? 0).toLocaleString()}</span>
                           </div>
                         </div>
                       )}
@@ -459,24 +459,24 @@ export function CustomerListApprovalPage() {
                           <div className="flex justify-between">
                             <span className="text-text-muted">High:</span>
                             <span className="text-danger">
-                              {list.validation.risk.high.toLocaleString()}
+                              {(list.validation.risk.high ?? 0).toLocaleString()}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-text-muted">Medium:</span>
                             <span className="text-warning">
-                              {list.validation.risk.medium.toLocaleString()}
+                              {(list.validation.risk.medium ?? 0).toLocaleString()}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-text-muted">Low:</span>
                             <span className="text-success">
-                              {list.validation.risk.low.toLocaleString()}
+                              {(list.validation.risk.low ?? 0).toLocaleString()}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-text-muted">Unknown:</span>
-                            <span>{list.validation.risk.unknown.toLocaleString()}</span>
+                            <span>{(list.validation.risk.unknown ?? 0).toLocaleString()}</span>
                           </div>
                         </div>
                       )}

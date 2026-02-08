@@ -171,7 +171,7 @@ export function TransactionalLogPage() {
             {/* Pagination */}
             <div className="flex items-center justify-between border-t border-border px-4 py-3">
               <p className="text-sm text-text-muted">
-                Showing {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, total)} of {total.toLocaleString()}
+                Showing {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, total)} of {(total ?? 0).toLocaleString()}
               </p>
               <div className="flex gap-2">
                 <Button

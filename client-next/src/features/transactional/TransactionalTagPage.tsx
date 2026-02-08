@@ -100,7 +100,7 @@ export function TransactionalTagPage() {
         <div>
           <p className="text-sm text-text-muted">{label}</p>
           <p className="text-2xl font-semibold text-text-primary">
-            {value.toLocaleString()}
+            {(value ?? 0).toLocaleString()}
             {rate && <span className="ml-2 text-sm font-normal text-text-muted">{rate}</span>}
           </p>
         </div>
