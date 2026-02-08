@@ -167,7 +167,7 @@ docker build -t edcom/database -f services/database.Dockerfile .
 docker build -t edcom/api -f services/api.Dockerfile .
 docker build -t edcom/smtprelay smtprelay/
 docker build -t edcom/screenshot screenshot/
-docker build -t edcom/proxy -f services/proxy-dev.Dockerfile .
+docker build -t edcom/proxy -f services/proxy.Dockerfile .
 
 # Build client-next
 echo ""
