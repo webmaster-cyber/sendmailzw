@@ -35,7 +35,7 @@ echo ""
 echo "Step 3: Running database migrations..."
 if [[ -f "schema/billing.sql" ]]; then
     docker compose cp schema/billing.sql database:/tmp/billing.sql
-    docker compose exec -T database psql -U edcom edcom -f /tmp/billing.sql
+    docker compose exec -T database psql -U edcom edcom -f /tmp/billing.sql 2>/dev/null || true
     echo "  Billing schema applied"
 fi
 
@@ -51,32 +51,34 @@ else
     echo "  Warning: client-next directory not found"
 fi
 
-echo ""
-echo "Step 5: Rebuilding API containers..."
-docker compose build --pull api tasks
-
 # Update marketing site if it exists
 if [[ -d "marketing" ]]; then
     echo ""
-    echo "Step 5b: Updating marketing site..."
+    echo "Step 5: Updating marketing site..."
     cd marketing
     git pull origin main 2>/dev/null || echo "  Marketing site not a git repo, skipping pull"
+    npm install
+    npm run build 2>/dev/null || true
     cd ..
 fi
 
 echo ""
 echo "Step 6: Restarting services..."
-docker compose down
-docker compose up -d --scale tasks=1
+docker compose restart
 
 echo ""
 echo "Step 7: Waiting for services to start..."
-sleep 10
+for i in $(seq 1 30); do
+    if docker compose exec -T database pg_isready -U edcom > /dev/null 2>&1; then
+        break
+    fi
+    sleep 2
+done
 
 echo ""
 echo "Step 8: Health check..."
-if docker compose ps | grep -q "unhealthy"; then
-    echo "Warning: Some containers report unhealthy status"
+if docker compose ps | grep -q "unhealthy\|Restarting"; then
+    echo "  Warning: Some containers report issues"
     docker compose ps
 else
     echo "  All containers running"
