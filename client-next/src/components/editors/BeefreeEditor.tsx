@@ -166,7 +166,7 @@ export function BeefreeEditor({ template, fields, onSave, onChange, transactiona
   }
 
   return (
-    <div className="relative">
+    <div className="relative h-full">
       {loading && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-surface">
           <Spinner size="lg" />
@@ -175,7 +175,7 @@ export function BeefreeEditor({ template, fields, onSave, onChange, transactiona
       <div
         ref={containerRef}
         id="bee-plugin-container"
-        className="h-[calc(100vh-200px)] min-h-[500px] w-full"
+        className="h-full min-h-[500px] w-full"
       />
     </div>
   )
