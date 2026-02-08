@@ -370,8 +370,35 @@ Ran 5 parallel audit agents across the entire codebase:
 
 ---
 
+## 2026-02-08 — Phase 13: Production Cutover Complete
+
+### Repo Cleanup ✅
+- Deleted old `client/` directory (82,711 lines removed)
+- Removed old client Dockerfiles and build scripts
+- Renamed `setup_from_source.sh` → `install.sh`
+- Renamed GitHub repo from `edcom-ce` → `sendmailzw`
+
+### Install Script — Fully Automated ✅
+- One-click install: auto-installs dependencies, collects config, builds, deploys
+- Production nginx config (static files, not Vite proxy)
+- Uses `proxy.Dockerfile` for SSL support
+
+### Production Deployment ✅
+- Server: 89.167.22.171
+- Live at: https://app.sendmail.co.zw and https://sendmail.co.zw
+- SSL with auto-renewal, database backup cron configured
+
+### Runtime Bugs Fixed ✅
+- crypto.randomUUID fallback for HTTP contexts (2 files)
+- toLocaleString null guards (35 calls across 22 files)
+- Production nginx config, SSL activation, admin creation
+
+---
+
 ## Production Server Reference
-- IP: `92.119.124.102`
-- Install path: `/root/edcom-install/`
-- Restart: `cd /root/edcom-install && ./restart.sh`
-- License: `E246BF-CC8F7D-F6234E-E24C9B-E148B7-V3`
+- **New server**: `89.167.22.171`
+  - URLs: https://app.sendmail.co.zw (app), https://sendmail.co.zw (marketing)
+  - Restart: `cd /root/edcom-install && docker compose restart`
+  - Upgrade: `cd /root/edcom-install && ./upgrade.sh`
+  - License: `E246BF-CC8F7D-F6234E-E24C9B-E148B7-V3`
+- **Old server** (decommission after 1-2 weeks): `92.119.124.102`

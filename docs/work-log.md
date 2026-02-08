@@ -310,7 +310,7 @@ Extended Phase 5 with additional features based on reference designs:
 - [x] SEO optimization (OG tags, Twitter cards, sitemap, robots.txt)
 - [x] CMS-editable SEO (per-page titles/descriptions, social image, Google verification)
 
-### Phase 13: Cutover 🔲
+### Phase 13: Cutover ✅
 - [x] Created `upgrade.sh` for safe deployments (backup, migrate, rebuild, restart)
 - [x] Added client-next build step to `upgrade.sh`
 - [x] Updated `docker-compose.yml` to mount `client-next/dist` as nginx html root
@@ -319,16 +319,15 @@ Extended Phase 5 with additional features based on reference designs:
 - [x] Created `generate_multisite_certificate.sh` for SAN SSL certs
 - [x] Created `config/nginx.ssl.multisite.conf` for domain-based routing
 - [x] Created comprehensive `docs/cutover-plan.md` with 7 phases
-- [ ] Provision new server
-- [ ] Export data from old server
-- [ ] Run setup on new server
-- [ ] Build client-next (`npm run build`)
-- [ ] Import database
-- [ ] Deploy marketing site (`./enable_multisite.sh`)
-- [ ] Test via hosts file
-- [ ] Update DNS records
-- [ ] Generate SSL certificate
-- [ ] Verify production
+- [x] Provision new server (89.167.22.171)
+- [x] Export data from old server (92.119.124.102)
+- [x] Run install on new server
+- [x] Build client-next (`npm run build`)
+- [x] Import database
+- [x] Deploy marketing site (`./enable_multisite.sh`)
+- [x] Update DNS records
+- [x] Generate SSL certificate
+- [x] Verify production — both sites live
 
 ---
 
@@ -346,6 +345,62 @@ Extended Phase 5 with additional features based on reference designs:
 - [x] Fixed marketing site .env URLs (were pointing to wrong port)
 - [x] Fixed 2 TypeScript errors (unused variables)
 - [x] Both client-next and marketing site compile cleanly
+
+---
+
+## 2026-02-08 — Phase 13: Production Cutover Complete
+
+### Repo Cleanup ✅
+- Deleted old `client/` directory (82,711 lines removed)
+- Removed `services/node-base.Dockerfile`, `services/client.Dockerfile`, `services/client-build.Dockerfile`
+- Updated `services/proxy.Dockerfile` to copy from `client-next/dist/`
+- Removed old client references from dev build scripts and CONTRIBUTING.md
+- Renamed `setup_from_source.sh` → `install.sh`
+- Renamed GitHub repo from `edcom-ce` → `sendmailzw`
+
+### Install Script (install.sh) — Fully Automated ✅
+- Auto-installs git, Docker, Node.js if missing
+- Collects IP, domain, Beefree license key, admin credentials upfront
+- Writes production nginx config (static file serving, not Vite proxy)
+- Removes dev override files that block production startup
+- Builds all Docker images and client-next
+- Runs database migrations and creates admin account
+- Uses `proxy.Dockerfile` (not `proxy-dev.Dockerfile`) for SSL support
+
+### Production Deployment ✅
+- New server: 89.167.22.171 (Ubuntu)
+- Database imported from old server (92.119.124.102)
+- Marketing site deployed via `enable_multisite.sh`
+- SSL certificates generated for sendmail.co.zw, app.sendmail.co.zw, www.sendmail.co.zw
+- Auto-renewal cron job and database backup cron configured
+
+### Runtime Bugs Fixed ✅
+- **crypto.randomUUID crash**: Requires HTTPS; added fallback `(crypto.randomUUID?.() ?? Math.random().toString(36).slice(2))` in ContactsFindPage and RouteEditPage
+- **toLocaleString crash**: 35 unguarded `.toLocaleString()` calls across 22 files; added `?? 0` null-coalescing
+- **White screen (dev nginx config)**: install.sh now writes production nginx config with `try_files`
+- **"no service selected"**: docker-compose.override.yml auto-loaded; install.sh now removes dev overrides
+- **SSL not activating**: Changed install.sh to use proxy.Dockerfile (has SSL CMD); added nginx.ssl.conf volume mount
+- **Admin creation failure**: Collect credentials in install.sh, pass as args to create_admin.py
+
+### Deployment Scripts Updated ✅
+- `upgrade.sh` — Fixed for production (no Dockerfile rebuilds, proper health checks)
+- `generate_multisite_certificate.sh` — Now fully automated: enables SSL mode, restarts proxy, sets up cron jobs
+- `docker-compose.yml` — Added nginx.ssl.conf volume mount to proxy service
+
+### Key Commits
+1. `9c92725` — Remove old client/ and clean up for standalone deployment
+2. `288224f` — Make install.sh fully self-contained with dependency installation
+3. `b1e78d4` — Prepare for repo rename to sendmailzw
+4. `42bbb28` — Remove dev override files during install
+5. `58d7d56` — Fix admin account creation in install.sh
+6. `cd61070` — Add Beefree license key prompt to install.sh
+7. `69dc52a` — Write production nginx config during install
+8. `b151388` — Fix crypto.randomUUID crash on HTTP
+9. `23fe5b8` — Guard all toLocaleString calls against undefined API values
+10. `f4c1d52` — Fix upgrade.sh for production use
+11. `6e9b105` — Mount nginx.ssl.conf into proxy container
+12. `e2f361f` — Use production proxy.Dockerfile in install script
+13. `b6bf5d4` — Automate SSL activation and cron setup in cert script
 
 ---
 
@@ -369,7 +424,10 @@ See `docs/future-roadmap.md` for details:
 ---
 
 ## Production Server Reference
-- IP: `92.119.124.102`
-- Install path: `/root/edcom-install/`
-- Restart: `cd /root/edcom-install && ./restart.sh`
-- License: `E246BF-CC8F7D-F6234E-E24C9B-E148B7-V3`
+- **New server**: `89.167.22.171`
+  - Install path: `/root/edcom-install/`
+  - URLs: https://app.sendmail.co.zw (app), https://sendmail.co.zw (marketing)
+  - Restart: `cd /root/edcom-install && docker compose restart`
+  - Upgrade: `cd /root/edcom-install && ./upgrade.sh`
+  - License: `E246BF-CC8F7D-F6234E-E24C9B-E148B7-V3`
+- **Old server** (decommission after 1-2 weeks): `92.119.124.102`
