@@ -19,7 +19,7 @@ import type { LoginResponse } from '../../types/auth'
  */
 export function ActivatePage() {
   const [searchParams] = useSearchParams()
-  const { login, logout } = useAuth()
+  const { login } = useAuth()
   const navigate = useNavigate()
 
   const usernameParam = searchParams.get('username') || ''
@@ -32,17 +32,8 @@ export function ActivatePage() {
   const [loading, setLoading] = useState(false)
   const [resendMessage, setResendMessage] = useState('')
 
-  const loggedOut = useRef(false)
   const autoSubmitted = useRef(false)
   const resendThrottle = useRef(0)
-
-  // Log out any existing session on mount
-  useEffect(() => {
-    if (!loggedOut.current) {
-      loggedOut.current = true
-      logout()
-    }
-  }, [logout])
 
   const doActivate = useCallback(async (activationCode: string) => {
     setError('')
