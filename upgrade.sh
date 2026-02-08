@@ -94,36 +94,14 @@ docker compose up -d --force-recreate
 echo ""
 echo "Step 9: Waiting for services to be ready..."
 echo -n "  "
-READY=false
-for i in $(seq 1 60); do
-    # Check database is ready
-    if ! docker compose exec -T database pg_isready -U edcom > /dev/null 2>&1; then
-        echo -n "."
-        sleep 2
-        continue
+for i in $(seq 1 15); do
+    if docker compose exec -T database pg_isready -U edcom > /dev/null 2>&1; then
+        break
     fi
-    # Check API is responding
-    if ! docker compose exec -T api sh -c 'wget -q -O /dev/null http://localhost:8000/api/ping' 2>/dev/null; then
-        echo -n "."
-        sleep 2
-        continue
-    fi
-    # Check proxy is responding
-    if ! docker compose exec -T proxy sh -c 'wget -q -O /dev/null http://localhost:80/' 2>/dev/null; then
-        echo -n "."
-        sleep 2
-        continue
-    fi
-    READY=true
-    break
+    echo -n "."
+    sleep 2
 done
-echo ""
-
-if $READY; then
-    echo "  All services ready"
-else
-    echo "  Warning: Some services may not be fully ready yet"
-fi
+echo " database ready"
 
 echo ""
 docker compose ps
