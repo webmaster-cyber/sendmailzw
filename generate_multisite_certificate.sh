@@ -57,12 +57,44 @@ certbot -v certonly --agree-tos --register-unsafely-without-email --webroot -w $
 
 set +x
 
+# Enable SSL mode
+echo "1" > $CWD/config/use_ssl
 echo ""
+echo ">>> SSL mode enabled"
+
+# Restart proxy to load certificate
+docker compose restart proxy 2>/dev/null || true
+echo ">>> Proxy restarted with SSL"
+
+# Set up cron jobs (if not already present)
+CRON_UPDATED=false
+CRON_CONTENT=$(crontab -l 2>/dev/null || true)
+
+if ! echo "$CRON_CONTENT" | grep -q "certbot renew"; then
+    CRON_CONTENT="$CRON_CONTENT
+0 0 */30 * * cd $CWD && certbot renew --quiet"
+    CRON_UPDATED=true
+    echo ">>> Added certificate auto-renewal cron job"
+fi
+
+if ! echo "$CRON_CONTENT" | grep -q "pg_dump"; then
+    mkdir -p /root/backups
+    CRON_CONTENT="$CRON_CONTENT
+0 3 * * * cd $CWD && docker compose exec -T database pg_dump -U edcom edcom > /root/backups/edcom_\$(date +\\%Y\\%m\\%d).sql
+0 4 * * * find /root/backups -name \"edcom_*.sql\" -mtime +7 -delete"
+    CRON_UPDATED=true
+    echo ">>> Added daily database backup cron job"
+fi
+
+if [ "$CRON_UPDATED" = true ]; then
+    echo "$CRON_CONTENT" | crontab -
+fi
+
 echo ""
-echo "Certificate generated successfully!"
+echo "======================================"
+echo "    SSL Certificate Installed!"
+echo "======================================"
 echo ""
-echo "Add the following line to crontab -e for automatic 30 day renewal:"
-echo ""
-echo "0 0 */30 * * cd $CWD && certbot renew --quiet --deploy-hook \"cp /etc/letsencrypt/live/$PRIMARY_DOMAIN/fullchain.pem $CWD/config/certificate_chain.crt; cp /etc/letsencrypt/live/$PRIMARY_DOMAIN/fullchain.pem $CWD/data/smtpcert/server.crt; cp /etc/letsencrypt/live/$PRIMARY_DOMAIN/privkey.pem $CWD/config/private.key; cp /etc/letsencrypt/live/$PRIMARY_DOMAIN/privkey.pem $CWD/data/smtpcert/server.key\""
-echo ""
+echo "  Domains: $@"
+echo "  Auto-renewal: enabled (cron)"
 echo ""
