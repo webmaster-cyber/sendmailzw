@@ -115,6 +115,42 @@ fi
 # Remove dev override files (they add profiles that prevent production startup)
 rm -f docker-compose.override.yml docker-compose.override.amd64.yml
 
+# Write production nginx server config (dev config proxies to Vite which doesn't exist in prod)
+echo ">>> Writing production nginx config..."
+cat > config/nginx.server.conf << 'ENDNGINX'
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  _;
+
+    location /api/ {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass   http://api:8000;
+    }
+
+    location /signup/ {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass   http://api:8000;
+    }
+
+    location = /l {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass   http://api:8000;
+    }
+
+    location /i/ {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass   http://api:8000;
+    }
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html;
+        try_files $uri $uri/ /index.html;
+    }
+}
+ENDNGINX
+
 # Redis optimization
 echo "vm.overcommit_memory=1" | tee /etc/sysctl.d/99-edcom.conf >/dev/null
 sysctl -w vm.overcommit_memory=1 >/dev/null 2>&1 || true
