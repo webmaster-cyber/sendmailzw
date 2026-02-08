@@ -22,7 +22,7 @@ const DEFAULT_FORM: RouteFormData = {
   usedefault: false,
   rules: [
     {
-      id: crypto.randomUUID(),
+      id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
       default: true,
       domaingroup: '',
       splits: [{ policy: '', pct: 100 }],
@@ -62,7 +62,7 @@ export function RouteEditPage() {
         usedefault: data.usedefault ?? false,
         rules: data.rules || [
           {
-            id: crypto.randomUUID(),
+            id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
             default: true,
             domaingroup: '',
             splits: [{ policy: '', pct: 100 }],
@@ -124,7 +124,7 @@ export function RouteEditPage() {
       ...prev,
       rules: [
         {
-          id: crypto.randomUUID(),
+          id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
           default: false,
           domaingroup: defaultDomainGroup,
           splits: [{ policy: defaultPolicy, pct: 100 }],
@@ -235,7 +235,7 @@ export function RouteEditPage() {
           ...prev,
           rules: [
             {
-              id: crypto.randomUUID(),
+              id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
               default: false,
               domaingroup: data,
               splits: [{ policy: defaultPolicy, pct: 100 }],

@@ -156,7 +156,7 @@ export function ContactsFindPage() {
 
       // Add search query part (searches all fields)
       parts.push({
-        id: crypto.randomUUID(),
+        id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
         type: 'Info',
         tag: '',
         prop: '!!*', // Special: search all fields
@@ -171,7 +171,7 @@ export function ContactsFindPage() {
       // Add status filter
       if (activeTab === 'active') {
         parts.push({
-          id: crypto.randomUUID(),
+          id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
           type: 'Info',
           tag: '',
           prop: 'Bounced',
@@ -188,7 +188,7 @@ export function ContactsFindPage() {
         })
       } else if (activeTab === 'unsubscribed') {
         parts.push({
-          id: crypto.randomUUID(),
+          id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
           type: 'Info',
           prop: 'Unsubscribed',
           operator: 'equals',
@@ -196,7 +196,7 @@ export function ContactsFindPage() {
         })
       } else if (activeTab === 'bounced') {
         parts.push({
-          id: crypto.randomUUID(),
+          id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
           type: 'Info',
           prop: 'Bounced',
           operator: 'equals',
@@ -204,7 +204,7 @@ export function ContactsFindPage() {
         })
       } else if (activeTab === 'complained') {
         parts.push({
-          id: crypto.randomUUID(),
+          id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
           type: 'Info',
           prop: 'Complained',
           operator: 'equals',
