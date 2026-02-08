@@ -31,6 +31,68 @@ function extractLinks(html: string): string[] {
   return links
 }
 
+function getHeatColor(clicks: number, max: number): string {
+  if (max === 0 || clicks === 0) return 'rgba(100,116,139,0.15)'
+  const ratio = clicks / max
+  if (ratio > 0.66) return 'rgba(239,68,68,0.25)'
+  if (ratio > 0.33) return 'rgba(249,115,22,0.2)'
+  return 'rgba(59,130,246,0.15)'
+}
+
+function injectHeatmap(html: string, linkclicks: number[]): string {
+  const maxClicks = Math.max(...linkclicks, 0)
+  let linkIndex = 0
+
+  const modified = html.replace(
+    /(<a\s)([^>]*href=["'][^"']+["'][^>]*>)/gi,
+    (match, openTag, rest) => {
+      const href = rest.match(/href=["']([^"']+)["']/i)?.[1] || ''
+      if (href.startsWith('#') || href.startsWith('mailto:')) return match
+
+      const clicks = linkclicks[linkIndex] || 0
+      const color = getHeatColor(clicks, maxClicks)
+      linkIndex++
+
+      return `${openTag}data-clicks="${clicks}" style="position:relative;outline:3px solid ${color};outline-offset:-1px;cursor:pointer" ${rest}`
+    }
+  )
+
+  const heatmapCSS = `
+    <style>
+      a[data-clicks] { position: relative !important; text-decoration: none; }
+      a[data-clicks]::after {
+        content: attr(data-clicks) " clicks";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e293b;
+        color: #fff;
+        font-size: 11px;
+        font-family: -apple-system, sans-serif;
+        padding: 4px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s;
+        z-index: 1000;
+      }
+      a[data-clicks]:hover::after {
+        opacity: 1;
+      }
+      a[data-clicks]:hover {
+        outline-width: 3px !important;
+        outline-color: rgba(37,99,235,0.6) !important;
+      }
+    </style>`
+
+  if (modified.includes('</head>')) {
+    return modified.replace('</head>', `${heatmapCSS}</head>`)
+  }
+  return heatmapCSS + modified
+}
+
 export function BroadcastHeatmapPage() {
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id') || ''
@@ -113,12 +175,12 @@ export function BroadcastHeatmapPage() {
           )}
         </div>
 
-        {/* Template preview */}
+        {/* Template preview with heatmap overlay */}
         <div className="card overflow-hidden lg:col-span-2">
           {html ? (
             <iframe
-              srcDoc={html}
-              title="Email Template"
+              srcDoc={injectHeatmap(html, data.linkclicks || [])}
+              title="Email Heatmap"
               className="w-full border-0"
               style={{ minHeight: 600 }}
               sandbox="allow-same-origin"
