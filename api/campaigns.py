@@ -1893,6 +1893,24 @@ class CampaignTest(object):
 
         html, _ = generate_html(db, camp, "test", imagebucket)
 
+        # Store viewtemplate so view-in-browser works for test emails
+        databucket = os.environ["s3_databucket"]
+        bodyutf8 = html.encode("utf-8")
+        bodykey = "templates/camp/%s/%s-%s.html" % (
+            camp["cid"],
+            id,
+            hashlib.md5(bodyutf8).hexdigest(),
+        )
+        s3_write(databucket, bodykey, bodyutf8)
+        db.campaigns.patch(id, {"viewtemplate": bodykey})
+
+        # Replace view-in-browser merge tag with real campaign ID
+        # (send function would use campid="test" which _handle_view can't look up)
+        webroot = get_webroot()
+        html = html.replace(
+            "{{!!viewinbrowser}}", "%s/l?t=x&c=%s" % (webroot, id)
+        )
+
         _, addr = email.utils.parseaddr(doc["to"])
         if not addr:
             addr = remove_newlines(doc["to"])

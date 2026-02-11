@@ -933,6 +933,12 @@ def newlink(
     url = m.group(2)
     rest = m.group(3)
 
+    # Don't wrap view-in-browser links in click tracking — the merge tag
+    # expands to a URL with & params that break when embedded unencoded in
+    # a &p= query parameter.  There is no useful click to track anyway.
+    if "!!viewinbrowser" in url:
+        return "%s%s%s" % (tag, url, rest)
+
     t = randomwords.random_word(cid, clickletters)
     track = True
 
