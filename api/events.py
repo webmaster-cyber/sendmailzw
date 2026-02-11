@@ -1635,7 +1635,36 @@ class Track(object):
                     c = "tx-%s" % campcid
 
             settingsid, ip, ts = None, None, None
-            if c != "test":
+
+            # Web view clicks (from view-in-browser page)
+            if tr == "w" and t == "click":
+                camp = json_obj(
+                    db.row(
+                        "select id, cid, data - 'parts' - 'rawText' from campaigns where id = %s",
+                        c,
+                    )
+                )
+                if camp is not None:
+                    db.execute(
+                        """insert into events (id, campid, uid, type, index, extra, ts, cid)
+                           values (%s, %s, %s, %s, %s, %s, %s, %s)
+                           on conflict do nothing""",
+                        shortuuid.uuid(),
+                        c,
+                        "webview",
+                        "click",
+                        index,
+                        json.dumps(
+                            {
+                                "useragent": useragent,
+                                "clientip": clientip,
+                            }
+                        ),
+                        datetime.utcnow().isoformat() + "Z",
+                        camp["cid"],
+                    )
+
+            elif c != "test":
                 if not tr:
                     log.info("event error: no tracking id")
                 else:
@@ -1745,7 +1774,6 @@ class Track(object):
             r'<img\s[^>]*(?:height="1"[^>]*width="1"|width="1"[^>]*height="1")[^>]*/?\s*>\n?',
             re.IGNORECASE,
         )
-
         with open_db() as db:
             camp = db.campaigns.get(campid)
             if camp is None:
@@ -1764,6 +1792,7 @@ class Track(object):
         html = _pixelre.sub("", html)
 
         # Replace merge tags with their default values
+        # For tracking-related tags, use "w" (web view) so links remain functional
         def replace_defaults(m: re.Match) -> str:  # type: ignore[type-arg]
             tagname = m.group(1)
             defval = ""
@@ -1772,7 +1801,10 @@ class Track(object):
                 dm = _defflagre.search(flag)
                 if dm:
                     defval = dm.group(1)
-            # System variables: remove them
+            # Keep tracking URLs functional with "w" (web view) placeholder
+            if tagname in ("!!trackingid", "!!uid"):
+                return "w"
+            # Other system variables: remove them
             if tagname.startswith("!!") or tagname.startswith("__"):
                 return ""
             return defval
