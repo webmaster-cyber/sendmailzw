@@ -1638,31 +1638,23 @@ class Track(object):
 
             # Web view clicks (from view-in-browser page)
             if tr == "w" and t == "click":
-                camp = json_obj(
-                    db.row(
-                        "select id, cid, data - 'parts' - 'rawText' from campaigns where id = %s",
-                        c,
-                    )
-                )
-                if camp is not None:
+                # Increment per-link click count
+                if index >= 0:
                     db.execute(
-                        """insert into events (id, campid, uid, type, index, extra, ts, cid)
-                           values (%s, %s, %s, %s, %s, %s, %s, %s)
-                           on conflict do nothing""",
-                        shortuuid.uuid(),
-                        c,
-                        "webview",
-                        "click",
+                        """update campaigns set data = jsonb_set(data, %s, ((data->'linkclicks'->>%s)::integer + 1)::text::jsonb)
+                           where id = %s and jsonb_array_length(data->'linkclicks') > %s""",
+                        ["linkclicks", str(index)],
                         index,
-                        json.dumps(
-                            {
-                                "useragent": useragent,
-                                "clientip": clientip,
-                            }
-                        ),
-                        datetime.utcnow().isoformat() + "Z",
-                        camp["cid"],
+                        c,
+                        index,
                     )
+                # Increment total click count
+                db.execute(
+                    "update campaigns set data = data || jsonb_build_object(%s, coalesce((data->>%s)::int, 0) + 1) where id = %s",
+                    "clicks_all",
+                    "clicks_all",
+                    c,
+                )
 
             elif c != "test":
                 if not tr:
