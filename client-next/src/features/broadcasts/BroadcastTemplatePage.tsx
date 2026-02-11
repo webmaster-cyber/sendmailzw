@@ -31,6 +31,7 @@ export function BroadcastTemplatePage() {
   const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [focusMode, setFocusMode] = useState(false)
   const editorContainerRef = useRef<HTMLDivElement>(null)
+  const savedRawTextRef = useRef<string | null>(null)
 
   const guardSave = useCallback(async () => {
     if (!data) return
@@ -80,10 +81,9 @@ export function BroadcastTemplatePage() {
   }, [id])
 
   const handleBeeSave = useCallback((jsonFile: string, htmlFile: string) => {
-    setData((prev) => prev ? ({
-      ...prev,
-      rawText: JSON.stringify({ html: htmlFile, json: JSON.parse(jsonFile) }),
-    }) : prev)
+    const rawText = JSON.stringify({ html: htmlFile, json: JSON.parse(jsonFile) })
+    savedRawTextRef.current = rawText
+    setData((prev) => prev ? ({ ...prev, rawText }) : prev)
     setDirty(true)
   }, [])
 
@@ -101,7 +101,10 @@ export function BroadcastTemplatePage() {
       if (data.type === 'beefree') {
         await triggerBeeSave()
       }
-      await api.patch(`/api/broadcasts/${id}`, data)
+      const patchData = savedRawTextRef.current
+        ? { ...data, rawText: savedRawTextRef.current }
+        : data
+      await api.patch(`/api/broadcasts/${id}`, patchData)
       setDirty(false)
       toast.success('Template saved')
     } catch {
@@ -118,7 +121,10 @@ export function BroadcastTemplatePage() {
       if (data.type === 'beefree') {
         await triggerBeeSave()
       }
-      await api.patch(`/api/broadcasts/${id}`, data)
+      const patchData = savedRawTextRef.current
+        ? { ...data, rawText: savedRawTextRef.current }
+        : data
+      await api.patch(`/api/broadcasts/${id}`, patchData)
       setDirty(false)
       navigate(`/broadcasts/rcpt?id=${id}`)
     } catch {
