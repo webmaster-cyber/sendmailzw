@@ -2758,7 +2758,7 @@ def ses_send(
         if tagname == "!!campid":
             return campid
         if tagname == "!!viewinbrowser":
-            return "%s/l?t=x&c=%s" % (linkwebroot, campid)
+            return "%s/l?t=x&c=%s" % (get_webroot(), campid)
 
         for realname, vals in othervars.items():
             var, d = vals
@@ -2847,7 +2847,7 @@ def sparkpost_send(
         if tagname == "!!campid":
             return campid
         if tagname == "!!viewinbrowser":
-            return "%s/l?t=x&c=%s" % (linkwebroot, campid)
+            return "%s/l?t=x&c=%s" % (get_webroot(), campid)
 
         for realname, vals in othervars.items():
             var, d = vals
@@ -2934,7 +2934,7 @@ def smtprelay_send(
         if tagname == "!!campid":
             return campid
         if tagname == "!!viewinbrowser":
-            return "%s/l?t=x&c=%s" % (linkwebroot, campid)
+            return "%s/l?t=x&c=%s" % (get_webroot(), campid)
 
         for realname, vals in othervars.items():
             var, d = vals
@@ -3023,7 +3023,7 @@ def easylink_send(
         if tagname == "!!campid":
             return campid
         if tagname == "!!viewinbrowser":
-            return "%s/l?t=x&c=%s" % (linkwebroot, campid)
+            return "%s/l?t=x&c=%s" % (get_webroot(), campid)
 
         for realname, vals in othervars.items():
             var, d = vals
@@ -3127,7 +3127,7 @@ def mailgun_send(
         if tagname == "!!campid":
             return campid
         if tagname == "!!viewinbrowser":
-            return "%s/l?t=x&c=%s" % (linkwebroot, campid)
+            return "%s/l?t=x&c=%s" % (get_webroot(), campid)
 
         for realname, vals in othervars.items():
             var, d = vals
