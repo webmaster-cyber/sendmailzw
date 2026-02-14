@@ -404,7 +404,81 @@ Extended Phase 5 with additional features based on reference designs:
 
 ---
 
+## 2026-02-08 — Post-Launch Polish
+
+### Deployment Fixes ✅
+- Removed `profiles: [marketing]` from docker-compose.yml — marketing now starts with all services
+- Fixed upgrade.sh: self-re-exec after git pull, migration marker file, TypeScript cache cleanup, API `--no-cache` rebuild, nginx multisite config copy
+- Simplified upgrade health check (just database readiness + container status)
+
+### UI Enhancements ✅
+- Full-screen focus mode for BeePro email template editor (maximize/minimize toggle)
+- Always-visible click count badges on broadcast heatmap preview
+- Signup plan auto-select fixed (matches by slug from marketing site `?plan=` param)
+
+### Marketing Site Updates ✅
+- Replaced all "free trial" references with "free plan" messaging
+- Updated FAQ, CTAs, pricing fallback plans — no trials offered
+
+### Billing Plan Documented (Future)
+- Payment during signup for paid plans — see `docs/billing-plan.md`
+- Payment methods: Paynow (EcoCash), bank deposit, cash (admin-confirmed)
+- Subscription lifecycle: pending → active → expired (sending blocked)
+- Renewal reminders, self-service downgrade to Free, admin payment confirmation
+- Stripe removed from payment options
+
+### Key Commits
+- `41e28ad` — Simplify start/stop (remove marketing profile, upgrade script rebuilds API)
+- `e07dcef` — Add full-screen focus mode to email template editor
+- `8aba84c` — Fix upgrade script: re-exec after pull, skip applied migrations, wait for ready
+- `b1c7a2a` — Clean TypeScript build cache before client build
+- `780e86f` — Upgrade script copies multisite nginx config to active ssl config
+- `772d26a` — Add click count tooltips to heatmap email preview
+- `a3cdc50` — Show heatmap click badges always instead of hover-only
+- `b0b2d09` — Simplify upgrade health check
+- `8c26e8d` — Fix signup plan auto-select to match by slug
+- `b428a72` — Replace free trial references with free plan messaging (marketing site)
+
+---
+
+## 2026-02-09 — Tracking Domains, View-in-Browser, Template Save Fix
+
+### HTTP Passthrough for Customer Tracking Domains ✅
+- Split nginx port 80 in `nginx.ssl.multisite.conf` into two server blocks:
+  - Platform domains (`sendmail.co.zw`, `app.sendmail.co.zw`) → redirect to HTTPS
+  - Default catch-all (`server_name _`) → proxy `/l` and `/api/` to API over HTTP, redirect rest to HTTPS
+- Customer tracking links (e.g. `http://link.agriculture.co.zw/l?...`) now work without SSL certs
+
+### Sendy Reverse Proxy ✅
+- Added `/app` location to marketing site server block → proxies to cPanel server at 87.117.234.111
+- Sendy at `https://sendmail.co.zw/app` continues to work after DNS change to new server
+
+### BeePro Template Save Fix ✅
+- **Bug**: `BroadcastTemplatePage.tsx` had a stale closure — `triggerBeeSave()` updated state via `setData()`, but `api.patch()` on the next line read the old `data` from the closure
+- **Fix**: Added `savedRawTextRef` to capture BeePro output synchronously (matching pattern already used in `TransactionalTemplateEditPage.tsx`)
+- Affected `handleSave()` and `handleNext()` — both now use ref value
+- This bug affected ALL users, not just impersonation
+
+### View-in-Browser Fixes ✅
+- **URL encoding bug**: `{{!!viewinbrowser}}` expands to a URL with `&c=` params; when wrapped in click tracking as `&p=`, the `&` wasn't URL-encoded, truncating the URL. Fix: skip click tracking for `{{!!viewinbrowser}}` links in `newlink()` (`api/shared/utils.py`)
+- **Test emails**: `CampaignTest.on_post` now stores a viewtemplate and pre-replaces `{{!!viewinbrowser}}` with the real campaign ID (was "test" which has no DB record)
+- **HTTPS**: View-in-browser URL now uses `get_webroot()` (platform HTTPS) instead of `linkwebroot` (custom HTTP tracking domain) — no "not secure" warning
+- **Functional tracking links**: `_handle_view` replaces `{{!!trackingid}}` and `{{!!uid}}` with `"w"` (web view marker) instead of empty strings, keeping links functional
+- **Click tracking**: Track handler records web view clicks (`r=w`) by incrementing `linkclicks` and `clicks_all` on the campaign
+
+### Key Commits
+- `723d4fd` — HTTP passthrough for customer tracking domains
+- `36bfbb0` — Reverse proxy for Sendy on cPanel server
+- `9760ca8` — Fix BeePro template save sending stale data
+- `f550bac` — Fix view-in-browser links for all emails including tests
+- `a2a7db3` — Track clicks from view-in-browser page
+- `9dfd91a` — Fix 500 error on web view click tracking
+- `136d78c` — Serve view-in-browser page over HTTPS platform domain
+
+---
+
 ## Backlog (Lower Priority)
+- [ ] Payment during signup for paid plans (see `docs/billing-plan.md`)
 - [ ] Zapier/Pabbly integrations - verify if still supported
 - [ ] Visual form builder (drag-and-drop)
 - [ ] Additional reporting features
